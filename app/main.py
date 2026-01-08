@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import analytics, websocket
-from app.database import Base, engine
 import logging
 
 # Configure logging
@@ -11,9 +10,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-# Create database tables
-Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -61,8 +57,16 @@ async def root():
 @app.on_event("startup")
 async def startup_event():
     """Run on application startup"""
+    from app.database import Base, engine
     logger.info("Starting Revamp-Gnosis Market Analytics API")
-    logger.info("Database tables created/verified")
+    
+    # Create database tables
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables created/verified")
+    except Exception as e:
+        logger.warning(f"Could not create database tables: {e}")
+    
     logger.info("API ready to accept connections")
 
 
