@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Collapse Field</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>body{font-family:monospace;background:#111;color:#eee;padding:20px}.card{background:#222;padding:15px;margin-bottom:10px}</style>
+</head>
+<body>
+    <div id="status">Disconnected</div>
+    <h1>Collapse Field Analytics</h1>
+    <div class="card">
+        <h2>State: <span id="symbol">SPY</span></h2>
+        <div>Price: <span id="price">--</span></div>
+        <div>Sigma: <span id="sigma">--</span></div>
+        <div>Lambda: <span id="lambda">--</span></div>
+    </div>
+    <div class="card"><div id="map-plot" style="height:300px"></div></div>
+    <script>
+        const symbol = "SPY";
+        const ws = new WebSocket(`ws://${location.host}/ws/state/${symbol}`);
+        ws.onopen = () => document.getElementById("status").innerText = "Connected";
+        ws.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            if(data.symbol !== symbol) return;
+            document.getElementById("price").innerText = data.price.toFixed(2);
+            document.getElementById("sigma").innerText = data.sigma.toFixed(5);
+            document.getElementById("lambda").innerText = data.lambda.toFixed(4);
+            if(data.map && data.map.map) {
+                const z = [];
+                const k = data.map.map.map(d => d.k);
+                for(let i=0; i<33; i++) {
+                    const row = [];
+                    for(let t=0; t<data.map.map.length; t++) row.push(data.map.map[t].dist[i]);
+                    z.push(row);
+                }
+                Plotly.react('map-plot', [{z: z, x: k, type: 'heatmap'}]);
+            }
+        };
+    </script>
+</body>
+</html>

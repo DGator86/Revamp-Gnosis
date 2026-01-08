@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+websockets
+numpy
+pandas
+sqlalchemy
+sqlmodel
+asyncpg
+pydantic
+pydantic-settings
+pyyaml
+pytest
+httpx

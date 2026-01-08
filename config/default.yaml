@@ -1,0 +1,40 @@
+alpha_decay: 120
+sigma_grid:
+  min: -4.0
+  max: 4.0
+  step: 0.25
+liquidity:
+  lookback_sessions: 3
+  weights:
+    vp: 0.9
+    vwap: 0.8
+    swings: 0.7
+    opt: 1.0
+    bb: 0.6
+    ichi: 0.8
+particle:
+  epsilon: 1.0e-6
+  shock_weight: 0.8
+dealer:
+  stay_prob: 0.97
+  flip_prob: 0.03
+  gex_window: 0.05
+hazard:
+  intercepts: [-2.0, -2.2, -2.2]
+  coeffs:
+    A: 1.2
+    P_L: 0.9
+    squeeze: 0.7
+    pool: 0.6
+    dVW: 0.4
+    dK: 0.3
+forward:
+  beta_L: 0.35
+  max_horizon: 240
+  mass_threshold: 0.85
+  var_threshold: 3.0
+db:
+  url: "postgresql+asyncpg://postgres:postgres@db:5432/collapse"
+api:
+  host: "0.0.0.0"
+  port: 8000
