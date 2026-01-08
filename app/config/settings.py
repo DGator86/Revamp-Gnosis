@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Optional, List
 
 
 class Settings(BaseSettings):
@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     z_min: float = -4.0
     z_max: float = 4.0
     z_step: float = 0.25
-    confidence_levels: list = [0.68, 0.95, 0.997]
+    confidence_levels: List[float] = [0.68, 0.95, 0.997]
     
     class Config:
         env_file = ".env"
